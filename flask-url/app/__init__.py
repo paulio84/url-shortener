@@ -18,6 +18,8 @@ def create_app(config_name: str | None = None) -> Flask:
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
 
+    from app import models  # noqa: F401
+
     # register blueprints
     register_blueprints(flask_app)
 
