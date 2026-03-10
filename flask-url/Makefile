@@ -1,4 +1,4 @@
-.PHONY: migrate upgrade downgrade shell
+.PHONY: migrate upgrade downgrade shell run
 
 migrate:
 	uv run flask db migrate -m "$(m)"
@@ -11,3 +11,6 @@ downgrade:
 
 shell:
 	uv run flask shell
+
+run:
+	uv run flask run

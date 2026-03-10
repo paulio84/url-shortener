@@ -8,6 +8,7 @@ dependencies = [
 "flask",
 "flask-migrate",
 "flask-sqlalchemy",
+"marshmallow",
 "psycopg2-binary",
 "python-dotenv"
 ]
