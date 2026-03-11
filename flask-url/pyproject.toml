@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
 "flask",
+"flask-bcrypt",
+"flask-jwt-extended",
 "flask-migrate",
 "flask-sqlalchemy",
 "marshmallow",
