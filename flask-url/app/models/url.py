@@ -26,13 +26,3 @@ class URL(db.Model):
 
     def __repr__(self) -> str:
         return f"<URL {self.short_code} -> {self.original_url[:30]}>"
-
-    def to_dict(self) -> dict:
-        return {
-            "id": self.id,
-            "original_url": self.original_url,
-            "short_code": self.short_code,
-            "short_url": f"/{self.short_code}",
-            "clicks": self.clicks,
-            "created_at": self.created_at.isoformat(),
-        }

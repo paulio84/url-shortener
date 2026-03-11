@@ -1,5 +1,7 @@
 from marshmallow import Schema, fields
 
+from app.models.url import URL
+
 
 class ShortenRequestSchema(Schema):
     """Validates and deserialises a shorten request"""
@@ -20,9 +22,12 @@ class URLResponseSchema(Schema):
     id = fields.Int(dump_only=True)
     original_url = fields.Str(dump_only=True)
     short_code = fields.Str(dump_only=True)
-    short_url = fields.Str(dump_only=True)
     clicks = fields.Int(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
+    short_url = fields.Method("get_short_url", dump_only=True)
+
+    def get_short_url(self, obj: URL) -> str:
+        return f"/{obj.short_code}"
 
 
 shorten_request_schema = ShortenRequestSchema()

@@ -20,7 +20,7 @@ class APIError(Exception):
     def to_dict(self) -> dict:
         return {
             "error": {
-                "status": self.status_code.value,
+                "status": self.status_code,
                 "message": self.message,
             }
         }
