@@ -1,0 +1,21 @@
+meta {
+  name: Shorten URL
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/shorten
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "url": "https://www.example.com"
+  }
+}

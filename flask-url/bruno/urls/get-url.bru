@@ -1,0 +1,19 @@
+meta {
+  name: Get URL by Short Code
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/urls/:short_code
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+params:path {
+  short_code: abc123
+}

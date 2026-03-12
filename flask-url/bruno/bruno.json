@@ -1,0 +1,6 @@
+{
+	"version": "1",
+	"name": "Flask URL Shortener",
+	"type": "collection",
+	"ignore": []
+}

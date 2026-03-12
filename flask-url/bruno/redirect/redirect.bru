@@ -1,0 +1,15 @@
+meta {
+  name: Redirect
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/:short_code
+  body: none
+  auth: none
+}
+
+params:path {
+  short_code: abc123
+}
