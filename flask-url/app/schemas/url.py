@@ -20,6 +20,7 @@ class URLResponseSchema(Schema):
     """Serialise a URL model instance for API responses."""
 
     id = fields.Int(dump_only=True)
+    user_id = fields.Int(dump_only=True)
     original_url = fields.Str(dump_only=True)
     short_code = fields.Str(dump_only=True)
     clicks = fields.Int(dump_only=True)

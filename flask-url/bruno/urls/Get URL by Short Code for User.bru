@@ -1,5 +1,5 @@
 meta {
-  name: Get URL by Short Code
+  name: Get URL by Short Code for User
   type: http
   seq: 3
 }
@@ -10,10 +10,10 @@ get {
   auth: bearer
 }
 
-auth:bearer {
-  token: {{accessToken}}
-}
-
 params:path {
   short_code: abc123
+}
+
+auth:bearer {
+  token: {{accessToken}}
 }

@@ -46,19 +46,54 @@ class MethodNotAllowedError(APIError):
     message = "Method not allowed."
 
 
-def register_error_handlers(flask_app: Flask) -> None:
-    @flask_app.errorhandler(APIError)
-    def handle_api_error(error: APIError):
-        return jsonify(error.to_dict()), error.status_code
+class UnauthorisedError(APIError):
+    status_code = HTTPStatus.UNAUTHORIZED.value
+    message = "Missing or invalid token."
 
+
+class ForbiddenError(APIError):
+    status_code = HTTPStatus.FORBIDDEN.value
+    message = "You do not have permission to access this resource."
+
+
+def register_error_handlers(flask_app: Flask) -> None:
+    from app.extensions import jwt
+
+    # Werkzeug routing level exceptions
     @flask_app.errorhandler(HTTPStatus.NOT_FOUND.value)
     def handle_not_found(error: HTTPException):
-        return jsonify(NotFoundError().to_dict()), error.status_code
+        return jsonify(NotFoundError().to_dict()), NotFoundError.status_code
 
     @flask_app.errorhandler(HTTPStatus.METHOD_NOT_ALLOWED.value)
     def handle_method_not_allowed(error: HTTPException):
-        return jsonify(MethodNotAllowedError().to_dict()), error.status_code
+        return jsonify(
+            MethodNotAllowedError().to_dict()
+        ), MethodNotAllowedError.status_code
 
     @flask_app.errorhandler(HTTPStatus.INTERNAL_SERVER_ERROR.value)
     def handle_internal_server_error(error: HTTPException):
-        return jsonify(ServiceError().to_dict()), error.status_code
+        return jsonify(ServiceError().to_dict()), ServiceError.status_code
+
+    # JWT exceptions - before the route function
+    @jwt.unauthorized_loader
+    def unauthorised_callback(reason: str):
+        return jsonify(
+            UnauthorisedError(reason).to_dict()
+        ), UnauthorisedError.status_code
+
+    @jwt.invalid_token_loader
+    def invalid_token_callback(reason: str):
+        return jsonify(
+            UnauthorisedError(reason).to_dict()
+        ), UnauthorisedError.status_code
+
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_payload):
+        return jsonify(
+            UnauthorisedError("Token has expired").to_dict()
+        ), UnauthorisedError.status_code
+
+    # Route-level exception handler
+    @flask_app.errorhandler(APIError)
+    def handle_api_error(error: APIError):
+        return jsonify(error.to_dict()), error.status_code

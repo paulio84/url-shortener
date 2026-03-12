@@ -7,7 +7,7 @@ class URLService:
     def __init__(self, repository: URLRepository):
         self.repository = repository
 
-    def create_short_url(self, original_url: str) -> URL:
+    def create_short_url(self, original_url: str, user_id: int) -> URL:
         """
         Create a new short URL entry.
         Handles short code collision with a retry loop.
@@ -20,14 +20,14 @@ class URLService:
         else:
             raise ServiceError("Failed to generate a unique short code.")
 
-        url = URL(original_url=original_url, short_code=code)
+        url = URL(original_url=original_url, short_code=code, user_id=user_id)
         return self.repository.save(url)
 
-    def get_by_short_code(self, short_code: str) -> URL:
-        url = self.repository.get_by_short_code(short_code)
+    def get_by_short_code_for_user(self, short_code: str, user_id: int) -> URL:
+        url = self.repository.get_by_short_code_for_user(short_code, user_id)
         if not url:
             raise NotFoundError(f"Short code '{short_code}' not found.")
         return url
 
-    def get_all(self) -> list[URL]:
-        return self.repository.all()
+    def get_all_for_user(self, user_id: int) -> list[URL]:
+        return self.repository.get_all_for_user(user_id)
