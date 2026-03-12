@@ -6,8 +6,8 @@ from app.models.url import URL
 
 
 class URLRepository:
-    def get_by_short_code(self, short_code: str) -> URL | None:
-        return URL.query.filter_by(short_code=short_code).first()
+    def exists_by_short_code(self, short_code: str) -> bool:
+        return URL.query.filter_by(short_code=short_code).first() is not None
 
     def get_by_short_code_for_user(self, short_code: str, user_id: int) -> URL | None:
         return URL.query.filter_by(short_code=short_code, user_id=user_id).first()

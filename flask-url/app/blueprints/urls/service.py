@@ -8,15 +8,12 @@ class URLService:
         self.repository = repository
 
     def create_short_url(self, original_url: str, user_id: int) -> URL:
-        """
-        Create a new short URL entry.
-        Handles short code collision with a retry loop.
-        """
+        """Create a new short URL entry. Handles short code collision with a retry loop."""
 
         max_attempts = 5
         for _ in range(max_attempts):
             code = generate_short_code()
-            if not self.repository.get_by_short_code(code):
+            if not self.repository.exists_by_short_code(code):
                 break
         else:
             raise ServiceError("Failed to generate a unique short code.")
