@@ -16,6 +16,12 @@ auth:bearer {
 
 body:json {
   {
-    "url": "https://www.example.com"
+    "url": "https://www.amazon.co.uk/"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setVar("lastShortCode", res.body.short_code);
   }
 }

@@ -5,11 +5,13 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/:short_code
+  url: {{baseUrl}}/{{lastShortCode}}
   body: none
   auth: none
 }
 
-params:path {
-  short_code: abc123
+settings {
+  encodeUrl: false
+  timeout: 0
+  followRedirects: false
 }
