@@ -3,7 +3,7 @@ import os
 from flask import Flask
 
 from app.blueprints import register_blueprints
-from app.config import config
+from app.config import DevelopmentConfig, ProductionConfig, config
 from app.errors import register_error_handlers
 from app.extensions import bcrypt, db, jwt, migrate
 
@@ -11,12 +11,15 @@ from app.extensions import bcrypt, db, jwt, migrate
 def create_app(config_name: str | None = None) -> Flask:
     """Application factory."""
     if config_name is None:
-        config_name = os.environ.get("FLASK_ENV", "development")
+        config_name = os.environ.get("FLASK_ENV", DevelopmentConfig.NAME)
+
+    if config_name == ProductionConfig.NAME:
+        ProductionConfig.validate()
 
     flask_app = Flask(__name__)
     flask_app.config.from_object(config[config_name])
 
-    # initialise extensions
+    # Initialise extensions
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
     jwt.init_app(flask_app)
@@ -24,7 +27,7 @@ def create_app(config_name: str | None = None) -> Flask:
 
     from app import models  # noqa: F401
 
-    # register blueprints and errors
+    # Register blueprints and errors
     register_error_handlers(flask_app)
     register_blueprints(flask_app)
 

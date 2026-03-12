@@ -1,14 +1,12 @@
 from marshmallow import Schema, fields
 
-from app.models.url import URL
-
 
 class ShortenRequestSchema(Schema):
     """Validates and deserialises a shorten request"""
 
     url = fields.Url(
         required=True,
-        schemes=["http", "https"],
+        schemes={"http", "https"},
         error_messages={
             "required": "A 'url' field is required.",
             "invalid": "Must be a valid URL starting with http:// or https://",
@@ -27,7 +25,7 @@ class URLResponseSchema(Schema):
     created_at = fields.DateTime(dump_only=True)
     short_url = fields.Method("get_short_url", dump_only=True)
 
-    def get_short_url(self, obj: URL) -> str:
+    def get_short_url(self, obj) -> str:
         return f"/{obj.short_code}"
 
 

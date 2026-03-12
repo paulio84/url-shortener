@@ -2,6 +2,8 @@ from marshmallow import Schema, fields, validate
 
 
 class RegisterRequestSchema(Schema):
+    """Validates and deserialises a register request."""
+
     email = fields.Email(
         required=True, error_messages={"required": "An email address is required."}
     )
@@ -16,6 +18,8 @@ class RegisterRequestSchema(Schema):
 
 
 class LoginRequestSchema(Schema):
+    """Validates and deserialises a login request."""
+
     email = fields.Email(
         required=True, error_messages={"required": "An email address is required."}
     )
@@ -27,6 +31,8 @@ class LoginRequestSchema(Schema):
 
 
 class UserResponseSchema(Schema):
+    """Serialises a User model instance for API reponses."""
+
     id = fields.Int(dump_only=True)
     email = fields.Email(dump_only=True)
     created_at = fields.DateTime(dump_only=True)

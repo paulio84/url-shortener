@@ -25,6 +25,3 @@ class URLRepository:
         except SQLAlchemyError as e:
             db.session.rollback()
             raise ServiceError(f"Database error: {str(e)}")
-
-    def all(self) -> list[URL]:
-        return URL.query.order_by(URL.created_at.desc()).all()

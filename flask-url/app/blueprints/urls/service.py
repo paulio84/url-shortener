@@ -12,6 +12,7 @@ class URLService:
         Create a new short URL entry.
         Handles short code collision with a retry loop.
         """
+
         max_attempts = 5
         for _ in range(max_attempts):
             code = generate_short_code()
@@ -24,10 +25,14 @@ class URLService:
         return self.repository.save(url)
 
     def get_by_short_code_for_user(self, short_code: str, user_id: int) -> URL:
+        """Retrieve a URL by short code scoped to the current user."""
+
         url = self.repository.get_by_short_code_for_user(short_code, user_id)
         if not url:
             raise NotFoundError(f"Short code '{short_code}' not found.")
         return url
 
     def get_all_for_user(self, user_id: int) -> list[URL]:
+        """Retrieve all URLs belonging to the current user."""
+
         return self.repository.get_all_for_user(user_id)

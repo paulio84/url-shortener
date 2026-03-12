@@ -57,9 +57,15 @@ class ForbiddenError(APIError):
 
 
 def register_error_handlers(flask_app: Flask) -> None:
+    # Local import to avoid circular import at module load time
     from app.extensions import jwt
 
-    # Werkzeug routing level exceptions
+    # Route-level APIError handler - catches anything raised in routes/services
+    @flask_app.errorhandler(APIError)
+    def handle_api_error(error: APIError):
+        return jsonify(error.to_dict()), error.status_code
+
+    # Werkzeug routing-level exceptions - raised before route functions run
     @flask_app.errorhandler(HTTPStatus.NOT_FOUND.value)
     def handle_not_found(error: HTTPException):
         return jsonify(NotFoundError().to_dict()), NotFoundError.status_code
@@ -71,10 +77,10 @@ def register_error_handlers(flask_app: Flask) -> None:
         ), MethodNotAllowedError.status_code
 
     @flask_app.errorhandler(HTTPStatus.INTERNAL_SERVER_ERROR.value)
-    def handle_internal_server_error(error: HTTPException):
+    def handle_internal_server_error(error: Exception):
         return jsonify(ServiceError().to_dict()), ServiceError.status_code
 
-    # JWT exceptions - before the route function
+    # JWT exceptions - intercepted before route functions fun
     @jwt.unauthorized_loader
     def unauthorised_callback(reason: str):
         return jsonify(
@@ -92,8 +98,3 @@ def register_error_handlers(flask_app: Flask) -> None:
         return jsonify(
             UnauthorisedError("Token has expired").to_dict()
         ), UnauthorisedError.status_code
-
-    # Route-level exception handler
-    @flask_app.errorhandler(APIError)
-    def handle_api_error(error: APIError):
-        return jsonify(error.to_dict()), error.status_code

@@ -9,6 +9,8 @@ class AuthService:
         self.repository = repository
 
     def register(self, email: str, password: str) -> User:
+        """Register a new user account."""
+
         if self.repository.get_by_email(email):
             raise ValidationError("An account with this email already exists.")
 
@@ -17,8 +19,10 @@ class AuthService:
         return self.repository.save(user)
 
     def login(self, email: str, password: str) -> User:
+        """Authenticate a user and return the user object."""
+
         user = self.repository.get_by_email(email)
         if not user or not bcrypt.check_password_hash(user.password_hash, password):
-            raise NotFoundError("Invalid username or password.")
+            raise NotFoundError("Invalid email or password.")
 
         return user

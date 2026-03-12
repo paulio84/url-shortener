@@ -17,5 +17,5 @@ class User(db.Model):
 
     urls = db.relationship("URL", back_populates="user", lazy="dynamic")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<User {self.email}>"
