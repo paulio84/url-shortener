@@ -5,13 +5,9 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/api/urls/:short_code
+  url: {{baseUrl}}/api/urls/{{lastShortCode}}
   body: none
   auth: bearer
-}
-
-params:path {
-  short_code: abc123
 }
 
 auth:bearer {

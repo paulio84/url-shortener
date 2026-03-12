@@ -51,6 +51,10 @@ class UnauthorisedError(APIError):
     message = "Missing or invalid token."
 
 
+class TokenExpiredError(UnauthorisedError):
+    message = "Token has expired."
+
+
 class ForbiddenError(APIError):
     status_code = HTTPStatus.FORBIDDEN.value
     message = "You do not have permission to access this resource."
@@ -80,21 +84,15 @@ def register_error_handlers(flask_app: Flask) -> None:
     def handle_internal_server_error(error: Exception):
         return jsonify(ServiceError().to_dict()), ServiceError.status_code
 
-    # JWT exceptions - intercepted before route functions fun
+    # JWT exceptions - intercepted before route functions run
     @jwt.unauthorized_loader
     def unauthorised_callback(reason: str):
-        return jsonify(
-            UnauthorisedError(reason).to_dict()
-        ), UnauthorisedError.status_code
+        return jsonify(UnauthorisedError().to_dict()), UnauthorisedError.status_code
 
     @jwt.invalid_token_loader
     def invalid_token_callback(reason: str):
-        return jsonify(
-            UnauthorisedError(reason).to_dict()
-        ), UnauthorisedError.status_code
+        return jsonify(UnauthorisedError().to_dict()), UnauthorisedError.status_code
 
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
-        return jsonify(
-            UnauthorisedError("Token has expired").to_dict()
-        ), UnauthorisedError.status_code
+        return jsonify(TokenExpiredError().to_dict()), TokenExpiredError.status_code
