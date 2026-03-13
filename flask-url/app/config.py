@@ -5,13 +5,22 @@ from datetime import timedelta
 class BaseConfig:
     """Shared configuration for all environments."""
 
-    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.environ.get(
-        "JWT_SECRET_KEY", "jwt-dev-secret-key-change-in-production"
-    )
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
+
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
+
+    @classmethod
+    def validate(cls):
+        required = ["SECRET_KEY", "JWT_SECRET_KEY"]
+        missing = [key for key in required if not os.environ.get(key)]
+        if missing:
+            raise RuntimeError(
+                f"Missing required environment variables: {', '.join(missing)}. "
+                "Check your .env file or environment configuration."
+            )
 
 
 class DevelopmentConfig(BaseConfig):
@@ -40,11 +49,14 @@ class ProductionConfig(BaseConfig):
 
     @classmethod
     def validate(cls):
-        required = ["SECRET_KEY", "JWT_SECRET_KEY", "DATABASE_URL"]
+        super().validate()
+
+        required = ["DATABASE_URL"]
         missing = [key for key in required if not os.environ.get(key)]
         if missing:
             raise RuntimeError(
-                f"Missing required environment variables: {', '.join(missing)}"
+                f"Missing required environment variables: {', '.join(missing)}. "
+                "Set these in your production environment."
             )
 
 
