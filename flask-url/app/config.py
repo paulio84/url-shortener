@@ -19,7 +19,7 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
-        "postgresql://postgres:postgres@localhost:5432/url_shortener_dev",
+        "postgresql://postgres:postgres@localhost:5432/urlme_dev",
     )
 
 
@@ -29,7 +29,7 @@ class TestingConfig(BaseConfig):
     JWT_ACCESS_TOKEN_EXPIRES = False
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "TEST_DATABASE_URL",
-        "postgresql://postgres:postgres@localhost:5432/url_shortener_test",
+        "postgresql://postgres:postgres@localhost:5433/urlme_test",
     )
 
 

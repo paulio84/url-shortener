@@ -10,6 +10,7 @@ dependencies = [
 "flask-jwt-extended",
 "flask-migrate",
 "flask-sqlalchemy",
+"gunicorn",
 "marshmallow",
 "psycopg2-binary",
 "python-dotenv"
