@@ -15,7 +15,9 @@ class URL(db.Model):
     __tablename__ = "url"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user_id = db.Column(
+        db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False
+    )
     original_url = db.Column(db.Text, nullable=False)
     short_code = db.Column(db.String(16), unique=True, nullable=False, index=True)
     clicks = db.Column(db.Integer, default=0, nullable=False)
