@@ -4,7 +4,7 @@ ifneq (,$(wildcard .env))
 	export
 endif
 
-.PHONY: run test migrate upgrade downgrade shell docker-build docker-up docker-down docker-up-build docker-dev-up docker-dev-down
+.PHONY: run test migrate upgrade downgrade shell docker-stage-up docker-stage-down docker-dev-up docker-dev-down
 
 # Local development
 run:
@@ -26,17 +26,11 @@ shell:
 	uv run flask shell
 
 # Docker
-docker-build:
-	docker compose build
+docker-stage-up:
+	docker compose -f docker-compose.staging.yml up -d --build
 
-docker-up:
-	docker compose up
-
-docker-down: 
-	docker compose down
-
-docker-up-build:
-	docker compose up --build
+docker-stage-down: 
+	docker compose -f docker-compose.staging.yml down
 
 docker-dev-up:
 	docker compose -f docker-compose.dev.yml up -d
