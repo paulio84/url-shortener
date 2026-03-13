@@ -1,0 +1,15 @@
+meta {
+  name: Get URL by Short Code for User
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/urls/{{lastShortCode}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

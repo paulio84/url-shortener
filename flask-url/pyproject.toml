@@ -1,0 +1,21 @@
+[project]
+name = "flask-url"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+"flask",
+"flask-bcrypt",
+"flask-jwt-extended",
+"flask-migrate",
+"flask-sqlalchemy",
+"gunicorn",
+"marshmallow",
+"psycopg2-binary",
+"python-dotenv"
+]
+
+
+[dependency-groups]
+dev = [ "pytest", "pytest-flask" ]
