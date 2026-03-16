@@ -1,62 +1,45 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-50">
-        <div class="w-full max-w-md bg-white rounded-lg shadow p-8">
-            <h1 class="text-2xl font-bold text-gray-900 mb-6">
-                Create an account
-            </h1>
+    <AuthCard title="Create an account">
+        <form @submit.prevent="handleSubmit" class="space-y-4">
+            
+            <FormField
+                id="email"
+                v-model="email"
+                label="Email"
+                type="email"
+                placeholder="you@example.com"
+            />
 
-            <form @submit.prevent="handleSubmit" class="space-y-4">
-                
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-                        Email
-                    </label>
-                    <input 
-                        id="email" 
-                        type="email" 
-                        v-model="email"
-                        required
-                        placeholder="you@example.com"
-                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                </div>
+            <FormField
+                id="password"
+                v-model="password"
+                label="Password"
+                type="password"
+                placeholder=""
+            />
 
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
-                        Password
-                    </label>
-                    <input 
-                        id="password"
-                        type="password"
-                        v-model="password"
-                        required
-                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                </div>
-
-                <p v-if="error" class="text-sm text-red-600">
-                    {{ error }}
-                </p>
-
-                <button 
-                    type="submit"
-                    :disabled="loading"
-                    class="w-full bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium hobver:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {{ loading ? "Creating account...": "Create account" }}
-                </button>
-
-            </form>
-
-            <p class="mt-4 text-sm text-gray-600">
-                Already have an account?
-                <RouterLink to="/login" class="text-blue-600 hover:underline">
-                    Sign in
-                </RouterLink>
+            <p v-if="error" class="text-sm text-red-600">
+                {{ error }}
             </p>
 
-        </div>
-    </div>
+            <button 
+                type="submit"
+                :disabled="loading"
+                class="w-full bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium hobver:bg-blue-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                {{ loading ? "Creating account...": "Create account" }}
+            </button>
+
+        </form>
+
+        <p class="mt-4 text-sm text-gray-600">
+            Already have an account?
+            <RouterLink to="/login" class="text-blue-600 hover:underline">
+                Sign in
+            </RouterLink>
+        </p>
+
+    </AuthCard>
 </template>
 
 <script setup lang="ts">
@@ -64,6 +47,8 @@ import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useAuthStore } from "@/stores/auth"
 import type { AuthResponse, APIError } from "@/types/api"
+import AuthCard from "@/components/AuthCard.vue"
+import FormField from "@/components/FormField.vue"
 
 const router = useRouter()
 const auth = useAuthStore()
