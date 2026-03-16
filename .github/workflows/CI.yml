@@ -1,0 +1,104 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    changes:
+        name: Detect Changes
+        runs-on: ubuntu-latest
+        permissions:
+            pull-requests: read
+        outputs:
+            flask: ${{ steps.filter.outputs.flask }}
+            vue: ${{ steps.filter.outputs.vue }}
+        steps:
+            - uses: actions/checkout@v6
+            - uses: dorny/paths-filter@v4
+              id: filter
+              with:
+                  filters: |
+                      flask:
+                        - 'flask-url/**'
+                      vue:
+                        - 'vue-url/**'
+
+    test-flask:
+        name: Run Tests
+        needs: changes
+        if: ${{ needs.changes.outputs.flask == 'true' }}
+        runs-on: ubuntu-latest
+
+        services:
+            db:
+                image: postgres:16-alpine
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: urlme_test
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 5s
+                    --health-timeout 5s
+                    --health-retries 5
+
+        defaults:
+            run:
+                working-directory: flask-url
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Install uv
+              uses: astral-sh/setup-uv@v7
+              with:
+                  version: "latest"
+
+            - name: Set up Python
+              run: uv python install 3.12
+
+            - name: Install dependencies
+              run: uv sync --frozen
+
+            - name: Run tests
+              env:
+                  FLASK_ENV: testing
+                  SECRET_KEY: ci-secret-key
+                  JWT_SECRET_KEY: ci-jwt-secret-key
+                  TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/urlme_test
+              run: uv run pytest -v
+
+    test-vue:
+        name: Run Vue Tests
+        needs: changes
+        if: ${{ needs.changes.outputs.vue == 'true' }}
+        runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: vue-url
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: "npm"
+                  cache-dependency-path: vue-url/package-lock.json
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Run tests
+              run: npm test
