@@ -1,5 +1,3 @@
 <template>
-  <div>
-    <p>UrlMe</p>
-  </div>
+    <RouterView />
 </template>
