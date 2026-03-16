@@ -19,13 +19,15 @@
                 @click="toggleVisibility"
                 class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:cursor-pointer hover:text-gray-700"
             >
-                {{ passwordVisible ? "Hide": "Show" }}
+                <EyeSlashIcon v-if="passwordVisible" class="w-4 h-4" />
+                <EyeIcon v-else class="w-4 h-4" />
             </button>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
 import { ref, computed } from "vue"
 
 const props = defineProps<{
