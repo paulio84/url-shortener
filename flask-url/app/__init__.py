@@ -5,7 +5,7 @@ from flask import Flask
 from app.blueprints import register_blueprints
 from app.config import BaseConfig, DevelopmentConfig, config
 from app.errors import register_error_handlers
-from app.extensions import bcrypt, db, jwt, migrate
+from app.extensions import bcrypt, cors, db, jwt, migrate
 
 
 def create_app(config_name: str | None = None) -> Flask:
@@ -24,6 +24,14 @@ def create_app(config_name: str | None = None) -> Flask:
     migrate.init_app(flask_app, db)
     jwt.init_app(flask_app)
     bcrypt.init_app(flask_app)
+    cors.init_app(
+        flask_app,
+        resources={
+            r"/api/*": {
+                "origins": os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
+            }
+        },
+    )
 
     from app import models  # noqa: F401
 

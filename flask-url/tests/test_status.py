@@ -28,3 +28,9 @@ class TestStatus:
 
         response = client.get("/api/status")
         assert response.status_code != HTTPStatus.UNAUTHORIZED
+
+    def test_status_cors_header_present(self, client: FlaskClient):
+        response = client.get(
+            "/api/status", headers={"Origin": "http://localhost:5173"}
+        )
+        assert "Access-Control-Allow-Origin" in response.headers
