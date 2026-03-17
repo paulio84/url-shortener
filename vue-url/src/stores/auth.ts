@@ -4,7 +4,8 @@ import type { User } from "@/api/types"
 
 export const useAuthStore = defineStore("auth", () => {
   // -- State --
-  const user = ref<User | null>(null)
+  const storedUser = localStorage.getItem("user")
+  const user = ref<User | null>(storedUser ? JSON.parse(storedUser) : null)
   const accessToken = ref<string | null>(localStorage.getItem("accessToken"))
 
   // -- Getters --

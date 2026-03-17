@@ -1,7 +1,7 @@
 <template>
     <nav class="bg-white border-b border-gray-200 px-6 py-4">
         <div class="max-w-4xl mx-auto flex items-center justify-between">
-            <span class="text-lg font-bold text-gray-900">UrlMe</span>
+            <RouterLink to="/" class="text-lg font-bold text-gray-900">UrlMe</RouterLink>
             <div class="flex items-center gap-4">
                 <span class="text-sm text-gray-600">{{ auth.user?.email }}</span>
                 <button

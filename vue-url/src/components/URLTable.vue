@@ -23,7 +23,7 @@
             </thead>
             <tbody class="divide-y divide-gray-200">
                 <tr v-for="url in urls" :key="url.id" class="hover:bg-gray-100">
-                    <td class="px-6 py-4 max-w-xs truncate text-gray-900">
+                    <td :title="url.original_url" class="px-6 py-4 max-w-xs truncate text-gray-900">
                         {{ url.original_url }}
                     </td>
                     <td class="px-6 py-4">
