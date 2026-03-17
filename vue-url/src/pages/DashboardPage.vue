@@ -9,7 +9,7 @@
 </template>
     
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
+import { ref, onMounted, onUnmounted } from "vue"
 import type { ShortURL } from "@/api/types"
 import NavBar from '@/components/NavBar.vue';
 import ShortenForm from '@/components/ShortenForm.vue';
@@ -22,9 +22,9 @@ const auth = useAuthStore()
 const urls = ref<ShortURL[]>([])
 const loading = ref(false)
 
-onMounted(async () => {
+async function loadURLs() {
     if (!auth.accessToken) return
-    
+
     loading.value = true
     try {
         const response = await fetchURLs(auth.accessToken)
@@ -33,6 +33,14 @@ onMounted(async () => {
     } finally {
         loading.value = false
     }
+}
+
+onMounted(() => {
+    window.addEventListener("focus", loadURLs)
+})
+
+onUnmounted(() => {
+    window.removeEventListener("focus", loadURLs)
 })
 
 function handleShortened(newUrl: ShortURL) {
