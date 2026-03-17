@@ -10,11 +10,12 @@
     
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
-import { useAuthStore } from "@/stores/auth"
-import type { ShortURL } from "@/types/api"
+import type { ShortURL } from "@/api/types"
 import NavBar from '@/components/NavBar.vue';
 import ShortenForm from '@/components/ShortenForm.vue';
 import URLTable from '@/components/URLTable.vue';
+import { fetchURLs } from "@/api/urls";
+import { useAuthStore } from "@/stores/auth";
 
 const auth = useAuthStore()
 
@@ -22,11 +23,11 @@ const urls = ref<ShortURL[]>([])
 const loading = ref(false)
 
 onMounted(async () => {
+    if (!auth.accessToken) return
+    
     loading.value = true
     try {
-        const response = await fetch("/api/urls", {
-            headers: { Authorization: `Bearer ${auth.accessToken}` },
-        })
+        const response = await fetchURLs(auth.accessToken)
         if (!response.ok) return
         urls.value = await response.json()
     } finally {
