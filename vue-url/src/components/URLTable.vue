@@ -46,18 +46,13 @@
 </template>
 
 <script setup lang="ts">
-import type { ShortURL } from "@/types/api"
+import type { ShortURL } from "@/api/types"
+import { fullShortUrl } from "@/api/urls";
 
 defineProps<{
     urls: ShortURL[]
     loading: boolean
 }>()
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
-
-function fullShortUrl(shortUrl: string): string {
-    return `${apiBaseUrl}${shortUrl}`
-}
 
 function formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString("en-GB", {

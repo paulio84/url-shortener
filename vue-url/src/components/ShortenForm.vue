@@ -4,7 +4,7 @@
 
         <form @submit.prevent="handleSubmit" class="flex gap-2">
             <input 
-                v-model="url"
+                v-model="originalUrl"
                 type="url"
                 required
                 placeholder="https://example.com/very/long/url"
@@ -19,19 +19,20 @@
             </button>
         </form>
 
-        <p v-if="error" class="mt-2 text-sm text-red 600">{{ error }}</p>
+        <p v-if="error" class="mt-2 text-sm text-red-600">{{ error }}</p>
 
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue"
+import type { ShortURL, APIError } from "@/api/types"
+import { shortenURL } from "@/api/urls"
 import { useAuthStore } from "@/stores/auth"
-import type { ShortURL, APIError } from "@/types/api"
 
 const auth = useAuthStore()
 
-const url = ref("")
+const originalUrl = ref("")
 const error = ref<string | null>(null)
 const loading = ref(false)
 
@@ -40,18 +41,13 @@ const emit = defineEmits<{
 }>()
 
 async function handleSubmit() {
+    if (!auth.accessToken) return
+
     error.value = null
     loading.value = true
 
     try {
-        const response = await fetch("/api/shorten", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${auth.accessToken}`,
-            },
-            body: JSON.stringify({ url: url.value }),
-        })
+        const response = await shortenURL(originalUrl.value, auth.accessToken)
 
         if (!response.ok) {
             const data: APIError = await response.json()
@@ -61,7 +57,7 @@ async function handleSubmit() {
 
         const data: ShortURL = await response.json()
         emit("shortened", data)
-        url.value = ""
+        originalUrl.value = ""
 
     } finally {
         loading.value = false

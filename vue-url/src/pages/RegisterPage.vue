@@ -25,7 +25,7 @@
             <button 
                 type="submit"
                 :disabled="loading"
-                class="w-full bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium hobver:bg-blue-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-blue-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {{ loading ? "Creating account...": "Create account" }}
             </button>
@@ -46,9 +46,10 @@
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useAuthStore } from "@/stores/auth"
-import type { AuthResponse, APIError } from "@/types/api"
+import type { APIError, AuthResponse } from "@/api/types"
 import AuthCard from "@/components/AuthCard.vue"
 import FormField from "@/components/FormField.vue"
+import { loginUser, registerUser } from "@/api/auth"
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -63,14 +64,7 @@ async function handleSubmit() {
     loading.value = true
 
     try {
-        const registerResponse = await fetch("/api/auth/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: email.value,
-                password: password.value,
-            }),
-        })
+        const registerResponse = await registerUser(email.value, password.value)
 
         if (!registerResponse.ok) {
             const data: APIError = await registerResponse.json()
@@ -78,14 +72,7 @@ async function handleSubmit() {
             return
         }
 
-        const loginResponse = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: email.value,
-                password: password.value,
-            }),
-        })
+        const loginResponse = await loginUser(email.value, password.value)
 
         if (!loginResponse.ok) {
             const data: APIError = await loginResponse.json()

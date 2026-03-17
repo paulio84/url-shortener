@@ -25,7 +25,7 @@
             <button 
                 type="submit"
                 :disabled="loading"
-                class="w-full bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-clue-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-blue-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {{ loading ? "Signing in...": "Sign in" }}
             </button>
@@ -45,9 +45,10 @@
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useAuthStore } from "@/stores/auth"
-import type { AuthResponse, APIError } from "@/types/api"
+import type { AuthResponse, APIError } from "@/api/types"
 import AuthCard from "@/components/AuthCard.vue"
 import FormField from "@/components/FormField.vue"
+import { loginUser } from "@/api/auth"
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -62,14 +63,7 @@ async function handleSubmit() {
     loading.value = true
 
     try {
-        const response = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: email.value, 
-                password: password.value,
-            }),
-        })
+        const response = await loginUser(email.value, password.value)
 
         if (!response.ok) {
             const data: APIError = await response.json()
