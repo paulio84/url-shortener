@@ -4,14 +4,14 @@
             <h2 class="text-lg font-semibold text-gray-900">Your URLs</h2>
         </div>
 
-        <div v-if="loading" class="px-6 py-8 text-center text-sm text-gray-500">
-            Loading...
+        <div v-if="loading" class="px-6 py-8 flex justify-center text-sm text-gray-500">
+            <img :src="loadingSpinner" alt="Loading..." class="w-14 h-auto">
         </div>
 
         <div v-else-if="urls.length === 0" class="px-6 py-8 text-center text-sm text-gray-500">
             No URLs yet. Shorten one above!
         </div>
-
+        
         <table v-else class="w-full text-sm">
             <thead class="bg-gray-50 border-b border-gray-200">
                 <tr>
@@ -46,6 +46,7 @@
 </template>
 
 <script setup lang="ts">
+import loadingSpinner from "@/assets/loading_spinner.svg"
 import type { ShortURL } from "@/api/types"
 import { fullShortUrl } from "@/api/urls";
 
@@ -61,5 +62,4 @@ function formatDate(dateString: string): string {
         year: "numeric",
     })
 }
-
 </script>
