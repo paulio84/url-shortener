@@ -56,3 +56,22 @@ class TestRedirect:
         response = client.get(f"/{short_code}", follow_redirects=False)
 
         assert response.status_code == HTTPStatus.FOUND
+
+    def test_redirect_increments_click_count_race_condition(
+        self, client: FlaskClient, authenticated_client: FlaskClient
+    ):
+        # Shorten a URL
+        shorten_response = authenticated_client.post(
+            "/api/shorten",
+            json={"url": "https://example.com"},
+        )
+        short_code = shorten_response.get_json()["short_code"]
+
+        # Click the short URL twice
+        client.get(f"/{short_code}", follow_redirects=False)
+        client.get(f"/{short_code}", follow_redirects=False)
+
+        # Verify the click count
+        url_response = authenticated_client.get(f"/api/urls/{short_code}")
+        data = url_response.get_json()
+        assert data["clicks"] == 2
