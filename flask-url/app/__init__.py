@@ -1,3 +1,4 @@
+import logging
 import os
 
 from flask import Flask
@@ -18,6 +19,11 @@ def create_app(config_name: str | None = None) -> Flask:
 
     flask_app = Flask(__name__)
     flask_app.config.from_object(config_class)
+
+    # Configure logging
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
+    )
 
     # Initialise extensions
     db.init_app(flask_app)
