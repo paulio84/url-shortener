@@ -1,3 +1,4 @@
+from sqlalchemy import update
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.errors import ServiceError
@@ -11,8 +12,11 @@ class RedirectRepository:
 
     def increment_clicks(self, url: URL) -> URL:
         try:
-            url.clicks += 1
+            db.session.execute(
+                update(URL).where(URL.id == url.id).values(clicks=URL.clicks + 1)
+            )
             db.session.commit()
+            db.session.refresh(url)
             return url
         except SQLAlchemyError as e:
             db.session.rollback()
