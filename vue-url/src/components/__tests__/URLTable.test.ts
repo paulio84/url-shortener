@@ -20,7 +20,8 @@ describe("URLTable", () => {
     const wrapper = mount(URLTable, {
       props: { urls: [], loading: true },
     })
-    expect(wrapper.text()).toContain("Loading...")
+    const imgs = wrapper.findAll("img[alt='Loading...']")
+    expect(imgs).toHaveLength(1)
   })
 
   it("shows empty state when no URLs", () => {
