@@ -9,6 +9,7 @@ dependencies = [
 "flask-bcrypt",
 "flask-cors",
 "flask-jwt-extended",
+"flask-limiter",
 "flask-migrate",
 "flask-smorest",
 "flask-sqlalchemy",

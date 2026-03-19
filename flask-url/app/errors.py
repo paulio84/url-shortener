@@ -1,7 +1,12 @@
 from http import HTTPStatus
 
 from flask import Flask, jsonify
-from werkzeug.exceptions import BadRequest, HTTPException, UnprocessableEntity
+from werkzeug.exceptions import (
+    BadRequest,
+    HTTPException,
+    TooManyRequests,
+    UnprocessableEntity,
+)
 
 
 class APIError(Exception):
@@ -65,6 +70,11 @@ class DuplicateError(APIError):
     message = "Resource already exists."
 
 
+class TooManyRequestsError(APIError):
+    status_code = HTTPStatus.TOO_MANY_REQUESTS.value
+    message = "Too many requests. Please try again later."
+
+
 def register_error_handlers(flask_app: Flask) -> None:
     # Local import to avoid circular import at module load time
     from app.extensions import jwt
@@ -112,6 +122,14 @@ def register_error_handlers(flask_app: Flask) -> None:
                 "Invalid request.", status_code=HTTPStatus.BAD_REQUEST.value
             ).to_dict()
         ), HTTPStatus.BAD_REQUEST.value
+
+    @flask_app.errorhandler(HTTPStatus.TOO_MANY_REQUESTS.value)
+    def handle_rate_limit_exceeded(error: TooManyRequests):
+        """Handle rate limit exceeded errors."""
+
+        return jsonify(
+            TooManyRequestsError().to_dict()
+        ), TooManyRequestsError.status_code
 
     # JWT exceptions - intercepted before route functions run
     @jwt.unauthorized_loader

@@ -7,6 +7,7 @@ from app.auth_utils import current_user_id
 from app.blueprints.urls import urls_bp
 from app.blueprints.urls.repository import URLRepository
 from app.blueprints.urls.service import URLService
+from app.extensions import limiter
 from app.schemas.url import (
     ShortenRequestSchema,
     URLResponseSchema,
@@ -20,6 +21,7 @@ def get_service() -> URLService:
 
 
 @urls_bp.post("/shorten")
+@limiter.limit("15 per minute")
 @jwt_required()
 @urls_bp.doc(security=[{"bearerAuth": []}])
 @urls_bp.response(HTTPStatus.CREATED, URLResponseSchema)
