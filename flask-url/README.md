@@ -62,6 +62,17 @@ Route → Service → Repository
 - **Local:** http://127.0.0.1:5000/api/docs
 - **Production:** https://urlme.onrender.com/api/docs
 
+## Rate Limiting
+The following endpoints are rate limited per IP address:
+
+| Endpoint                  | Limit         |
+| ------------------------- | ------------- |
+| `POST /api/auth/register` | 3 per minute  |
+| `POST /api/auth/login`    | 5 per minute  |
+| `POST /api/shorten`       | 15 per minute |
+
+Exceeded limits return `429 Too Many Requests`.
+
 ## Local Development
 
 ### Prerequisites
@@ -149,3 +160,4 @@ SECRET_KEY=<strong random value>
 JWT_SECRET_KEY=<strong random value>
 CORS_ALLOWED_ORIGINS=<Vercel frontend URL>
 ```
+
