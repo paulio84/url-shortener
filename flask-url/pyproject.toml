@@ -10,6 +10,7 @@ dependencies = [
 "flask-cors",
 "flask-jwt-extended",
 "flask-migrate",
+"flask-smorest",
 "flask-sqlalchemy",
 "gunicorn",
 "marshmallow",

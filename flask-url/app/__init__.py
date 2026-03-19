@@ -6,7 +6,7 @@ from flask import Flask
 from app.blueprints import register_blueprints
 from app.config import BaseConfig, DevelopmentConfig, config
 from app.errors import register_error_handlers
-from app.extensions import bcrypt, cors, db, jwt, migrate
+from app.extensions import api, bcrypt, cors, db, jwt, migrate
 
 
 def create_app(config_name: str | None = None) -> Flask:
@@ -38,6 +38,7 @@ def create_app(config_name: str | None = None) -> Flask:
             }
         },
     )
+    api.init_app(flask_app)
 
     from app import models  # noqa: F401
 
