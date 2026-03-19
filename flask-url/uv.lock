@@ -260,7 +260,7 @@ requires-dist = [
     { name = "flask-cors" },
     { name = "flask-jwt-extended" },
     { name = "flask-migrate" },
-    { name = "flask-smorest", specifier = ">=0.46.2" },
+    { name = "flask-smorest" },
     { name = "flask-sqlalchemy" },
     { name = "gunicorn" },
     { name = "marshmallow" },

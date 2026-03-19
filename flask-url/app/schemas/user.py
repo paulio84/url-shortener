@@ -17,6 +17,14 @@ class RegisterRequestSchema(Schema):
     )
 
 
+class UserResponseSchema(Schema):
+    """Serialises a User model instance for API reponses."""
+
+    id = fields.Int(dump_only=True)
+    email = fields.Email(dump_only=True)
+    created_at = fields.DateTime(dump_only=True)
+
+
 class LoginRequestSchema(Schema):
     """Validates and deserialises a login request."""
 
@@ -30,14 +38,15 @@ class LoginRequestSchema(Schema):
     )
 
 
-class UserResponseSchema(Schema):
-    """Serialises a User model instance for API reponses."""
+class LoginResponseSchema(Schema):
+    """Serialises a response to include a User model and access tokens."""
 
-    id = fields.Int(dump_only=True)
-    email = fields.Email(dump_only=True)
-    created_at = fields.DateTime(dump_only=True)
+    access_token = fields.Str(dump_only=True)
+    refresh_token = fields.Str(dump_only=True)
+    user = fields.Nested(UserResponseSchema, dump_only=True)
 
 
-register_request_schema = RegisterRequestSchema()
-login_request_schema = LoginRequestSchema()
-user_response_schema = UserResponseSchema()
+class RefreshResponseSchema(Schema):
+    """Serialises a refresh token response."""
+
+    access_token = fields.Str(dump_only=True)

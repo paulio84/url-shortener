@@ -27,8 +27,3 @@ class URLResponseSchema(Schema):
 
     def get_short_url(self, obj) -> str:
         return f"/{obj.short_code}"
-
-
-shorten_request_schema = ShortenRequestSchema()
-url_response_schema = URLResponseSchema()
-url_response_list_schema = URLResponseSchema(many=True)

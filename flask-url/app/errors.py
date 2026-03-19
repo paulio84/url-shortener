@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 from flask import Flask, jsonify
-from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import HTTPException, UnprocessableEntity
 
 
 class APIError(Exception):
@@ -83,6 +83,20 @@ def register_error_handlers(flask_app: Flask) -> None:
     @flask_app.errorhandler(HTTPStatus.INTERNAL_SERVER_ERROR.value)
     def handle_internal_server_error(error: Exception):
         return jsonify(ServiceError().to_dict()), ServiceError.status_code
+
+    @flask_app.errorhandler(UnprocessableEntity)
+    def handle_validation_error(error: UnprocessableEntity):
+        # Override flask-smorest's default 422 handler to match our error shape.
+        error_message = ValidationError.message
+
+        messages = error.data.get("messages", {}).get("json", {})
+        if messages:
+            field_errors = list(messages.values())[0]
+            error_message = field_errors[0]
+
+        return jsonify(
+            ValidationError(error_message).to_dict()
+        ), ValidationError.status_code
 
     # JWT exceptions - intercepted before route functions run
     @jwt.unauthorized_loader

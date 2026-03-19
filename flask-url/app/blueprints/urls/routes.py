@@ -1,18 +1,15 @@
 from http import HTTPStatus
 
-from flask import g, jsonify, request
+from flask import g
 from flask_jwt_extended import jwt_required
-from marshmallow import ValidationError as MarshmallowValidationError
 
 from app.auth_utils import current_user_id
 from app.blueprints.urls import urls_bp
 from app.blueprints.urls.repository import URLRepository
 from app.blueprints.urls.service import URLService
-from app.errors import ValidationError
 from app.schemas.url import (
-    shorten_request_schema,
-    url_response_list_schema,
-    url_response_schema,
+    ShortenRequestSchema,
+    URLResponseSchema,
 )
 
 
@@ -24,25 +21,21 @@ def get_service() -> URLService:
 
 @urls_bp.post("/shorten")
 @jwt_required()
-def shorten_url():
-    try:
-        data = shorten_request_schema.load(request.get_json(silent=True) or {})
-    except MarshmallowValidationError as e:
-        raise ValidationError(str(e.messages))
-
-    url = get_service().create_short_url(data["url"], current_user_id())
-    return jsonify(url_response_schema.dump(url)), HTTPStatus.CREATED.value
+@urls_bp.response(HTTPStatus.CREATED, URLResponseSchema)
+@urls_bp.arguments(ShortenRequestSchema)
+def shorten_url(request_data: ShortenRequestSchema):
+    return get_service().create_short_url(request_data["url"], current_user_id())
 
 
 @urls_bp.get("/urls")
 @jwt_required()
+@urls_bp.response(HTTPStatus.OK, URLResponseSchema(many=True))
 def list_urls():
-    urls = get_service().get_all_for_user(current_user_id())
-    return jsonify(url_response_list_schema.dump(urls)), HTTPStatus.OK.value
+    return get_service().get_all_for_user(current_user_id())
 
 
 @urls_bp.get("/urls/<string:short_code>")
 @jwt_required()
+@urls_bp.response(HTTPStatus.OK, URLResponseSchema)
 def get_url(short_code: str):
-    url = get_service().get_by_short_code_for_user(short_code, current_user_id())
-    return jsonify(url_response_schema.dump(url)), HTTPStatus.OK.value
+    return get_service().get_by_short_code_for_user(short_code, current_user_id())
