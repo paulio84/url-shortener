@@ -2,7 +2,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Shorten a URL</h2>
 
-        <form @submit.prevent="handleSubmit" class="flex gap-2">
+        <form @submit.prevent="handleSubmit" class="flex flex-col sm:flex-row gap-2">
             <input 
                 v-model="originalUrl"
                 type="url"
