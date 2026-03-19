@@ -1,14 +1,22 @@
+import base64
+import hashlib
 import secrets
-import string
 from datetime import datetime, timezone
 
 from app.extensions import db
 
 
-def generate_short_code(length: int = 6) -> str:
-    """Generate a cryptographically secure random short code."""
-    alphabet = string.ascii_letters + string.digits
-    return "".join(secrets.choice(alphabet) for _ in range(length))
+def generate_short_code(original_url: str, user_id: int, length: int = 6) -> str:
+    """
+    Generate a short code using SHA256 hash with a random salt.
+
+    Using a hash-based approach with a random salt avoids collistion-check
+    loops and produces a uniform distribution across the character space.
+    """
+    salt = secrets.token_hex(8)
+    content = f"{original_url}{user_id}{salt}"
+    hash_bytes = hashlib.sha256(content.encode()).digest()
+    return base64.urlsafe_b64encode(hash_bytes)[:length].decode()
 
 
 class URL(db.Model):
