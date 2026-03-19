@@ -58,6 +58,10 @@ Route → Service → Repository
 | GET    | `/<short_code>`          | No            | Redirect to original URL       |
 | GET    | `/api/status`            | No            | Health check                   |
 
+## API Documentation
+- **Local:** http://127.0.0.1:5000/api/docs
+- **Production:** https://urlme.onrender.com/api/docs
+
 ## Local Development
 
 ### Prerequisites
