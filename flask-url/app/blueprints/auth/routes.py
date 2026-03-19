@@ -11,6 +11,7 @@ from flask_jwt_extended import (
 from app.blueprints.auth import auth_bp
 from app.blueprints.auth.repository import AuthRepository
 from app.blueprints.auth.service import AuthService
+from app.extensions import limiter
 from app.schemas.user import (
     LoginRequestSchema,
     LoginResponseSchema,
@@ -27,6 +28,7 @@ def get_service() -> AuthService:
 
 
 @auth_bp.post("/register")
+@limiter.limit("3 per minute")
 @auth_bp.response(HTTPStatus.CREATED, UserResponseSchema)
 @auth_bp.arguments(RegisterRequestSchema)
 def register(request_data: RegisterRequestSchema):
@@ -34,6 +36,7 @@ def register(request_data: RegisterRequestSchema):
 
 
 @auth_bp.post("/login")
+@limiter.limit("5 per minute")
 @auth_bp.response(HTTPStatus.OK, LoginResponseSchema)
 @auth_bp.arguments(LoginRequestSchema)
 def login(request_data: LoginRequestSchema):

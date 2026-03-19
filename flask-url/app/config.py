@@ -55,6 +55,7 @@ class TestingConfig(BaseConfig):
     NAME = "testing"
     TESTING = True
     JWT_ACCESS_TOKEN_EXPIRES = False
+    RATELIMIT_ENABLED = False
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "TEST_DATABASE_URL",
         "postgresql://postgres:postgres@localhost:5433/urlme_test",
