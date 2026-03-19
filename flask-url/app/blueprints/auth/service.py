@@ -1,11 +1,11 @@
 import logging
 
 from app.blueprints.auth.repository import AuthRepository
-from app.errors import NotFoundError, ValidationError
+from app.errors import DuplicateError, NotFoundError, ValidationError
 from app.extensions import bcrypt
 from app.models.user import User
 
-logger = logging.getLogger(__name__)  # g variable?
+logger = logging.getLogger(__name__)
 
 
 class AuthService:
@@ -15,15 +15,15 @@ class AuthService:
     def register(self, email: str, password: str) -> User:
         """Register a new user account."""
 
-        if self.repository.get_by_email(email):
+        password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
+        try:
+            user = User(email=email, password_hash=password_hash)
+            saved_user = self.repository.save(user)
+            logger.info("New user registered: %s (id=%s)", email, saved_user.id)
+            return saved_user
+        except DuplicateError:
             logger.warning("Registration attempt with existing email: %s", email)
             raise ValidationError("An account with this email already exists.")
-
-        password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
-        user = User(email=email, password_hash=password_hash)
-        saved_user = self.repository.save(user)
-        logger.info("New user registered: %s (id=%s)", email, saved_user.id)
-        return saved_user
 
     def login(self, email: str, password: str) -> User:
         """Authenticate a user and return the user object."""

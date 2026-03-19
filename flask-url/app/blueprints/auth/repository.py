@@ -1,6 +1,6 @@
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
-from app.errors import ServiceError
+from app.errors import DuplicateError, ServiceError
 from app.extensions import db
 from app.models.user import User
 
@@ -14,6 +14,9 @@ class AuthRepository:
             db.session.add(user)
             db.session.commit()
             return user
+        except IntegrityError:
+            db.session.rollback()
+            raise DuplicateError()
         except SQLAlchemyError as e:
             db.session.rollback()
             raise ServiceError(f"Database error: {str(e)}")

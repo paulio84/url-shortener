@@ -60,6 +60,11 @@ class ForbiddenError(APIError):
     message = "You do not have permission to access this resource."
 
 
+class DuplicateError(APIError):
+    status_code = HTTPStatus.CONFLICT.value
+    message = "Resource already exists."
+
+
 def register_error_handlers(flask_app: Flask) -> None:
     # Local import to avoid circular import at module load time
     from app.extensions import jwt
