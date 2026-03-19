@@ -21,6 +21,7 @@ def get_service() -> URLService:
 
 @urls_bp.post("/shorten")
 @jwt_required()
+@urls_bp.doc(security=[{"bearerAuth": []}])
 @urls_bp.response(HTTPStatus.CREATED, URLResponseSchema)
 @urls_bp.arguments(ShortenRequestSchema)
 def shorten_url(request_data: ShortenRequestSchema):
@@ -29,6 +30,7 @@ def shorten_url(request_data: ShortenRequestSchema):
 
 @urls_bp.get("/urls")
 @jwt_required()
+@urls_bp.doc(security=[{"bearerAuth": []}])
 @urls_bp.response(HTTPStatus.OK, URLResponseSchema(many=True))
 def list_urls():
     return get_service().get_all_for_user(current_user_id())
@@ -36,6 +38,7 @@ def list_urls():
 
 @urls_bp.get("/urls/<string:short_code>")
 @jwt_required()
+@urls_bp.doc(security=[{"bearerAuth": []}])
 @urls_bp.response(HTTPStatus.OK, URLResponseSchema)
 def get_url(short_code: str):
     return get_service().get_by_short_code_for_user(short_code, current_user_id())

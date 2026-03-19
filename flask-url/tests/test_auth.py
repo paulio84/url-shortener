@@ -26,7 +26,7 @@ class TestRegister:
         assert "password" not in data
         assert "password_hash" not in data
 
-    def test_register_duplicate_email_returns_400(self, client: FlaskClient):
+    def test_register_duplicate_email_returns_422(self, client: FlaskClient):
         client.post(
             "/api/auth/register",
             json={"email": "test@example.com", "password": "testpassword"},
@@ -35,35 +35,50 @@ class TestRegister:
             "/api/auth/register",
             json={"email": "test@example.com", "password": "testpassword"},
         )
-        assert response.status_code == HTTPStatus.BAD_REQUEST
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
-    def test_register_missing_email_returns_400(self, client: FlaskClient):
+    def test_register_missing_email_returns_422(self, client: FlaskClient):
         response = client.post(
             "/api/auth/register",
             json={"password": "testpassword"},
         )
-        assert response.status_code == HTTPStatus.BAD_REQUEST
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
-    def test_register_missing_password_returns_400(self, client: FlaskClient):
+    def test_register_missing_password_returns_422(self, client: FlaskClient):
         response = client.post(
             "/api/auth/register",
             json={"email": "test@example.com"},
         )
-        assert response.status_code == HTTPStatus.BAD_REQUEST
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
-    def test_register_short_password_returns_400(self, client: FlaskClient):
+    def test_register_short_password_returns_422(self, client: FlaskClient):
         response = client.post(
             "/api/auth/register",
             json={"email": "test@example.com", "password": "short"},
         )
-        assert response.status_code == HTTPStatus.BAD_REQUEST
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
-    def test_register_invalid_email_returns_400(self, client: FlaskClient):
+    def test_register_invalid_email_returns_422(self, client: FlaskClient):
         response = client.post(
             "/api/auth/register",
             json={"email": "notanemail", "password": "testpassword"},
         )
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+
+    def test_register_malformed_json_returns_400_and_correct_shape(
+        self, client: FlaskClient
+    ):
+        response = client.post(
+            "/api/auth/register",
+            data='{"email: "test@test.com", "password: "testpassword"}',
+            content_type="application/json",
+        )
+        data = response.get_json()
         assert response.status_code == HTTPStatus.BAD_REQUEST
+        assert "error" in data
+        assert "status" in data["error"]
+        assert "message" in data["error"]
+        assert data["error"]["message"] == "Invalid request."
 
 
 class TestLogin:

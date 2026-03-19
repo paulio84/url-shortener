@@ -42,12 +42,12 @@ class TestShortenURL:
         assert data["clicks"] == 0
         assert len(data["short_code"]) == 6
 
-    def test_shorten_missing_url_field_returns_400(
+    def test_shorten_missing_url_field_returns_422(
         self, authenticated_client: FlaskClient
     ):
         response = authenticated_client.post("/api/shorten", json={})
 
-        assert response.status_code == HTTPStatus.BAD_REQUEST
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
     def test_shorten_missing_url_field_returns_error_shape(
         self, authenticated_client: FlaskClient
@@ -59,17 +59,17 @@ class TestShortenURL:
         assert "status" in data["error"]
         assert "message" in data["error"]
 
-    def test_shorten_invalid_url_returns_400(self, authenticated_client: FlaskClient):
+    def test_shorten_invalid_url_returns_422(self, authenticated_client: FlaskClient):
         response = authenticated_client.post(
             "/api/shorten", json={"url": "not-valid-url"}
         )
 
-        assert response.status_code == HTTPStatus.BAD_REQUEST
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
-    def test_shorten_empty_body_returns_400(self, authenticated_client: FlaskClient):
+    def test_shorten_empty_body_returns_422(self, authenticated_client: FlaskClient):
         response = authenticated_client.post("/api/shorten", json={"url": ""})
 
-        assert response.status_code == HTTPStatus.BAD_REQUEST
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
     def test_shorten_http_url_is_accepted(self, authenticated_client: FlaskClient):
         response = authenticated_client.post(

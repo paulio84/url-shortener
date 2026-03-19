@@ -51,6 +51,7 @@ def login(request_data: LoginRequestSchema):
 
 @auth_bp.post("/refresh")
 @jwt_required(refresh=True)
+@auth_bp.doc(security=[{"bearerAuth": []}])
 @auth_bp.response(HTTPStatus.OK, RefreshResponseSchema)
 def refresh():
     identity = get_jwt_identity()
