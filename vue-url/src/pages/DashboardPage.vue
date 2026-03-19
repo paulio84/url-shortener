@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen bg-gray-50">
         <NavBar />
-        <main class="max-w-4xl mx-auto px-6 py-8 space-y-6">
+        <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
             <ShortenForm @shortened="handleShortened" />
             <URLTable :urls="urls" :loading="loading" />
         </main>
