@@ -36,6 +36,7 @@ async function loadURLs() {
 }
 
 onMounted(() => {
+    loadURLs()
     window.addEventListener("focus", loadURLs)
 })
 
