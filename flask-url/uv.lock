@@ -17,6 +17,23 @@ wheels = [
 ]
 
 [[package]]
+name = "apispec"
+version = "6.10.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4a/f1/1f5a9332df3ecd90cc5ab69bc58a4174b8ba2ac1720c4c26b01d20751bf5/apispec-6.10.0.tar.gz", hash = "sha256:0a888555cd4aa5fb7176041be15684154fd8961055e1672e703abf737e8761bf", size = 80631, upload-time = "2026-03-06T21:48:40.916Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/20/88/e149b20246c4689e7d27163e4e3bb8946ef31617cfb3b9c427813483fe5b/apispec-6.10.0-py3-none-any.whl", hash = "sha256:8ff23e0de9a0ceb62ff70047241126315bd17b8d0565a567934c0156f4ddbb43", size = 31313, upload-time = "2026-03-06T21:48:39.404Z" },
+]
+
+[package.optional-dependencies]
+marshmallow = [
+    { name = "marshmallow" },
+]
+
+[[package]]
 name = "bcrypt"
 version = "5.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -184,6 +201,22 @@ wheels = [
 ]
 
 [[package]]
+name = "flask-smorest"
+version = "0.46.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "apispec", extra = ["marshmallow"] },
+    { name = "flask" },
+    { name = "marshmallow" },
+    { name = "webargs" },
+    { name = "werkzeug" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/20/09/70074c15a9644a1def601b4fc78c114d4b2f4275310bc3476d1411da3003/flask_smorest-0.46.2.tar.gz", hash = "sha256:7d9099a37a5add415670d6904ae032eefc1d2ba2432f060d7c048c74fc655a80", size = 77421, upload-time = "2025-09-10T20:18:26.991Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5d/92/f5176b1bfc672c4d91c5ca70941c72e1e61bd28bce53037680c1e79be330/flask_smorest-0.46.2-py3-none-any.whl", hash = "sha256:caff5b95d575044f90854c70a218d4c05bc920e462fdca2c58c0dd48ce29946c", size = 32329, upload-time = "2025-09-10T20:18:25.58Z" },
+]
+
+[[package]]
 name = "flask-sqlalchemy"
 version = "3.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -206,6 +239,7 @@ dependencies = [
     { name = "flask-cors" },
     { name = "flask-jwt-extended" },
     { name = "flask-migrate" },
+    { name = "flask-smorest" },
     { name = "flask-sqlalchemy" },
     { name = "gunicorn" },
     { name = "marshmallow" },
@@ -226,6 +260,7 @@ requires-dist = [
     { name = "flask-cors" },
     { name = "flask-jwt-extended" },
     { name = "flask-migrate" },
+    { name = "flask-smorest" },
     { name = "flask-sqlalchemy" },
     { name = "gunicorn" },
     { name = "marshmallow" },
@@ -573,6 +608,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/72/94/1a15dd82efb362ac84269196e94cf00f187f7ed21c242792a923cdb1c61f/typing_extensions-4.15.0.tar.gz", hash = "sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466", size = 109391, upload-time = "2025-08-25T13:49:26.313Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl", hash = "sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548", size = 44614, upload-time = "2025-08-25T13:49:24.86Z" },
+]
+
+[[package]]
+name = "webargs"
+version = "8.7.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "marshmallow" },
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/37/64/17afc4e6f47eef154a553c6e56adcc9f1ac3003305c7df978d11aa62937e/webargs-8.7.1.tar.gz", hash = "sha256:799bf9039c76c23fd8dc1951107a75a9e561203c15d6ae8f89c1e46e234636c1", size = 97351, upload-time = "2025-10-29T16:07:50.066Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/41/ef/b0d17f3943429358184449771b592e0e1d33bbeaa6ed326434a95eac187b/webargs-8.7.1-py3-none-any.whl", hash = "sha256:a184aed9d2509e6e14ab99ee3e9dc3a614c7070affe94cd4dfdb0d002e0a6e5f", size = 32500, upload-time = "2025-10-29T16:07:47.895Z" },
 ]
 
 [[package]]

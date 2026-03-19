@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 from flask import Flask, jsonify
-from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import BadRequest, HTTPException, UnprocessableEntity
 
 
 class APIError(Exception):
@@ -32,7 +32,7 @@ class NotFoundError(APIError):
 
 
 class ValidationError(APIError):
-    status_code = HTTPStatus.BAD_REQUEST.value
+    status_code = HTTPStatus.UNPROCESSABLE_ENTITY.value
     message = "Invalid request data."
 
 
@@ -83,6 +83,30 @@ def register_error_handlers(flask_app: Flask) -> None:
     @flask_app.errorhandler(HTTPStatus.INTERNAL_SERVER_ERROR.value)
     def handle_internal_server_error(error: Exception):
         return jsonify(ServiceError().to_dict()), ServiceError.status_code
+
+    @flask_app.errorhandler(HTTPStatus.UNPROCESSABLE_ENTITY.value)
+    def handle_validation_error(error: UnprocessableEntity):
+        # Override flask-smorest's default 422 handler to match our error shape.
+        error_message = ValidationError.message
+
+        messages = error.data.get("messages", {}).get("json", {})
+        if messages:
+            field_errors = list(messages.values())[0]
+            error_message = field_errors[0]
+
+        return jsonify(
+            ValidationError(error_message).to_dict()
+        ), ValidationError.status_code
+
+    @flask_app.errorhandler(HTTPStatus.BAD_REQUEST.value)
+    def handle_bad_request_error(error: BadRequest):
+        """Handle malformed JSON and other bad requests."""
+
+        return jsonify(
+            ValidationError(
+                "Invalid request.", status_code=HTTPStatus.BAD_REQUEST.value
+            ).to_dict()
+        ), HTTPStatus.BAD_REQUEST.value
 
     # JWT exceptions - intercepted before route functions run
     @jwt.unauthorized_loader
