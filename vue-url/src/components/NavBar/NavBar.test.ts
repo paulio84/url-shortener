@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest"
 import { mount } from "@vue/test-utils"
 import { createPinia, setActivePinia } from "pinia"
 import { createRouter, createWebHistory } from "vue-router"
-import NavBar from "@/components/NavBar.vue"
+import NavBar from "@/components/NavBar/NavBar.vue"
 import { useAuthStore } from "@/stores/auth"
 
 const router = createRouter({

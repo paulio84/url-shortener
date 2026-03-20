@@ -11,9 +11,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue"
 import type { ShortURL } from "@/api/types"
-import NavBar from '@/components/NavBar.vue';
-import ShortenForm from '@/components/ShortenForm.vue';
-import URLTable from '@/components/URLTable.vue';
+import NavBar from '@/components/NavBar/NavBar.vue';
+import ShortenForm from '@/components/ShortenForm/ShortenForm.vue';
+import URLTable from '@/components/URLTable/URLTable.vue';
 import { fetchURLs } from "@/api/urls";
 import { useAuthStore } from "@/stores/auth";
 

@@ -46,8 +46,8 @@ import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useAuthStore } from "@/stores/auth"
 import type { AuthResponse, APIError } from "@/api/types"
-import AuthCard from "@/components/AuthCard.vue"
-import FormField from "@/components/FormField.vue"
+import AuthCard from "@/components/AuthCard/AuthCard.vue"
+import FormField from "@/components/FormField/FormField.vue"
 import { loginUser } from "@/api/auth"
 
 const router = useRouter()
