@@ -25,21 +25,30 @@
             </button>
         </div>
 
-        <!-- Mobile menu-->
-        <div 
-            v-if="menuOpen"
-            class="sm:hidden absolute top-full right-0 w-full bg-white shadow-lg border-t border-gray-200 py-2 z-50"
+        <!-- Mobile menu -->
+        <Transition
+            enter-active-class="transition ease-out duration-150"
+            enter-from-class="opacity-0 -translate-y-1"
+            enter-to-class="opacity-100 translate-y-0"
+            leave-active-class="transition ease-in duration-100"
+            leave-from-class="opacity-100 translate-y-0"
+            leave-to-class="opacity-0 -translate-y-1"
         >
-            <p class="px-4 py-2 text-sm text-gray-600 border-b border-gray-100">
-                {{ auth.user?.email }}
-            </p>
-            <button 
-                @click="handleLogout"
-                class="px-4 py-2 text-sm text-red-600 hover:bg-gray-50 hover:text-red-800 font-medium hover:cursor-pointer"
+            <div 
+                v-if="menuOpen"
+                class="sm:hidden absolute top-full right-0 w-full bg-white shadow-lg border-t border-gray-200 py-2 z-50"
             >
-                Sign out
-            </button>
-        </div>
+                <p class="px-4 py-2 text-sm text-gray-600 border-b border-gray-100">
+                    {{ auth.user?.email }}
+                </p>
+                <button 
+                    @click="handleLogout"
+                    class="px-4 py-2 text-sm text-red-600 hover:bg-gray-50 hover:text-red-800 font-medium hover:cursor-pointer"
+                >
+                    Sign out
+                </button>
+            </div>
+        </Transition>
     </nav>
 </template>
 
