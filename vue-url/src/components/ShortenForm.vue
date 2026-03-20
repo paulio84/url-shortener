@@ -5,14 +5,14 @@
         <form @submit.prevent="handleSubmit" class="flex flex-col sm:flex-row gap-2">
             <input 
                 v-model="originalUrl"
-                type="url"
+                type="text"
                 required
                 placeholder="https://example.com/very/long/url"
                 class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button 
                 type="submit"
-                :disabled="loading"
+                :disabled="loading || disableSubmit"
                 class="bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:cursor-pointer hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
             >
                 {{ loading ? "Shortening..." : "Shorten URL" }}
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import type { ShortURL, APIError } from "@/api/types"
 import { shortenURL } from "@/api/urls"
 import { useAuthStore } from "@/stores/auth"
@@ -39,6 +39,8 @@ const loading = ref(false)
 const emit = defineEmits<{
     shortened: [url: ShortURL]
 }>()
+
+const disableSubmit = computed(() => originalUrl.value.length < 3)
 
 async function handleSubmit() {
     if (!auth.accessToken) return
