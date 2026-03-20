@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { mount } from "@vue/test-utils"
-import URLTable from "@/components/URLTable.vue"
+import URLTable from "@/components/URLTable/URLTable.vue"
 import type { ShortURL } from "@/api/types"
 
 const mockURLs: ShortURL[] = [

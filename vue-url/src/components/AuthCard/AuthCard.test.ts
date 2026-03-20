@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { mount } from "@vue/test-utils"
 import { createRouter, createWebHistory } from "vue-router"
-import AuthCard from "@/components/AuthCard.vue"
+import AuthCard from "@/components/AuthCard/AuthCard.vue"
 
 const router = createRouter({
   history: createWebHistory(),
